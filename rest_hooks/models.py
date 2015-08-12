@@ -60,6 +60,11 @@ class Hook(models.Model):
         if getattr(settings, 'HOOK_SERIALIZER', None):
             serializer = get_module(settings.HOOK_SERIALIZER)
             return serializer(instance, hook=self)
+        if isinstance(instance, dict):
+            return {
+                'hook': self.dict(),
+                'data': instance,
+            }
         # if no user defined serializers, fallback to the django builtin!
         return {
             'hook': self.dict(),
